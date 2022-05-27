@@ -39,8 +39,7 @@
 ![SQS](https://user-images.githubusercontent.com/58035150/170737701-ed18f239-5ed4-4964-8c1c-e14830aeb46f.jpg)
 #### Tạo API bằng API Gateway
 - Vào AWS tạo các Lamda function theo API.txt
-- Làm theo video sau để tạo API cho 2 function vừa tạo 
-{Video hướng dẫn tạo API}
+- Làm theo video sau để tạo API cho 2 function vừa tạo: https://youtu.be/vKmmZ9Wp2-s
 - Sửa đường dẫn API tương tự SQS
 ![API](https://user-images.githubusercontent.com/58035150/170737733-ee732e99-648c-455d-bba5-a2c48f835dcb.png)
 
