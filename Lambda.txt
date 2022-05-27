@@ -1,0 +1,186 @@
+=======================CreateTable==========================
+============================================================
+===SQS yêu cầu: TriggerCreateTable
+===Ví dụ Message Body: 
+{
+  "TableName": "Employees",
+  "HashKeyName": "Name",
+  "HashKeyType": "S",
+  "RangeKeyName": "Email",
+  "RangeKeyType": "S",
+  "ReadCapacityUnits": 1,
+  "WriteCapacityUnits": 1
+}
+===
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+
+def lambda_handler(event, context):
+    input = json.loads(event['Records'][0]['body'])
+    key_schema = [
+               {
+                   'AttributeName': input['HashKeyName'],
+                   'KeyType': 'HASH'
+               }
+           ]
+    attribute_definitions = [
+           {
+               'AttributeName': input['HashKeyName'],
+               'AttributeType': input['HashKeyType']
+           }
+        ]
+    if("RangeKeyName" in input.keys()):
+        key_schema.append({
+               'AttributeName': input['RangeKeyName'],
+               'KeyType': 'RANGE'
+           })
+        attribute_definitions.append({
+               'AttributeName':input['RangeKeyName'],
+               'AttributeType': input['RangeKeyType']
+           })
+        
+    table = dynamodb.create_table (
+        TableName = input['TableName'],
+        KeySchema = key_schema,
+        AttributeDefinitions = attribute_definitions,
+        ProvisionedThroughput={
+            'ReadCapacityUnits':input['ReadCapacityUnits'],
+            'WriteCapacityUnits':input['WriteCapacityUnits']
+        }
+    )
+=======================DeleteTable==========================
+============================================================
+===SQS yêu cầu: TriggerDeleteTable
+===Ví dụ Message Body:
+{
+  "TableName": "Employees"
+}
+===
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+
+def lambda_handler(event, context):
+    table_name = json.loads(event['Records'][0]['body'])['TableName']
+    table = dynamodb.Table(table_name)
+    res = table.delete()
+    return res
+
+=======================CreateItem===========================
+============================================================
+===SQS yêu cầu: TriggerCreateItem
+===Ví dụ Message Body:
+{
+  "TableName": "Students",
+  "uid": "012222222",
+  "Name": "Trung",
+  "Age": 20,
+  "Male": true
+}
+===
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+
+def lambda_handler(event, context):
+    # input = event
+    input = json.loads(event['Records'][0]['body'])
+    table_name = input['TableName']
+    items = {}
+    for key, val in input.items():
+        if key != "TableName":
+            items[key] = val
+    table = dynamodb.Table(table_name)
+    response = table.put_item(
+    Item = items
+    )
+    return response
+
+=======================UpdateItem===========================
+============================================================
+===SQS yêu cầu: TriggerUpdateItem
+===Ví dụ Message Body
+{
+  "TableName": "Students",
+  "Key": {
+    "uid": "012222222"
+  },
+  "Age": 20,
+  "Male": true,
+  "New": "Trung"
+}
+===
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+client = boto3.client('dynamodb')
+
+def lambda_handler(event, context):
+    ######################################
+    # Get table
+    input = event
+    table_name = input['TableName']
+    table = dynamodb.Table(table_name)
+    ######################################
+    # Get keys
+    key_schema = client.describe_table(TableName=table_name)['Table']['KeySchema']
+    hash_key = ""
+    range_key = ""
+    for key in key_schema:
+        if(key['KeyType']=='HASH'):
+            hash_key = key['AttributeName']
+        elif(key['KeyType']=="RANGE"):
+            range_key = key['AttributeName']
+    #######################################
+    attr_values = {}
+    attr_names = {}
+    update_expression = "SET "
+    i = 0
+    for key, val in input.items():
+        if ((key != "TableName") and (key != "Key")):
+            i+=1
+            k1 = '#name'+str(i)
+            k2 = ':val'+str(i)
+            attr_names[k1] = key
+            attr_values[k2] = val
+            update_expression = update_expression + k1 + " = " + k2 + " , "
+    update_expression = update_expression[:-2]
+    response = table.update_item(
+        Key = input['Key'],
+        UpdateExpression = update_expression,
+        ExpressionAttributeValues = attr_values,
+        ExpressionAttributeNames = attr_names
+        )
+    return response
+=======================DeleteItem===========================
+============================================================
+===SQS yêu cầu: TriggerDeleteItem
+===Ví dụ MessageBody:
+{
+  "TableName": "Students",
+  "Key": {
+    "uid": "012222222"
+  }
+}
+===
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+client = boto3.client('dynamodb')
+
+def lambda_handler(event, context):
+    ######################################
+    # Get table
+    # input = event
+    input = json.loads(event['Records'][0]['body'])
+    table_name = input['TableName']
+    table = dynamodb.Table(table_name)
+    #######################################
+    response = table.delete_item(Key = input['Key'])
+    return response

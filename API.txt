@@ -1,0 +1,43 @@
+////////////////GetAllTableDetails///////////
+//////////Tạo APIGetAllTableDetails/////////
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+client = boto3.client('dynamodb')
+
+def lambda_handler(event, context):
+    tables = list(dynamodb.tables.all())
+    lst_tables_name = []
+    for table in tables:
+        lst_tables_name.append(table.name) 
+    res = {}
+    for table_name in lst_tables_name:
+        table_detail = client.describe_table(TableName=table_name)['Table']
+        key_schema = table_detail['KeySchema']
+        partition_key = ""
+        sort_key = ""
+        for key in key_schema:
+            if(key['KeyType'] == "HASH"):
+                partition_key = key['AttributeName']
+            elif(key['KeyType'] == "RANGE"):
+                sort_key = key['AttributeName']
+        status = table_detail['TableStatus']
+        res[table_name] = {}
+        res[table_name]["PartitionKey"] = partition_key
+        res[table_name]["SortKey"] = sort_key
+        res[table_name]["Status"] = status
+    return res
+////////////////GetItemsByTableName///////////
+//////////Tạo APIGetItemsByTableName/////////
+import json
+import boto3
+
+dynamodb=boto3.resource('dynamodb')
+
+def lambda_handler(event, context):
+    input = event['body-json']
+    table_name=input['TableName']
+    table=dynamodb.Table(table_name)
+    res=table.scan()
+    return res
