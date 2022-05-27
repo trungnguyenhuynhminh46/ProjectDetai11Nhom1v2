@@ -41,6 +41,7 @@
 - Vào AWS tạo các Lamda function theo API.txt
 - Làm theo video sau để tạo API cho 2 function vừa tạo 
 {Video hướng dẫn tạo API}
+- Sửa đường dẫn API tương tự SQS
 ![API](https://user-images.githubusercontent.com/58035150/170737733-ee732e99-648c-455d-bba5-a2c48f835dcb.png)
 
 ### Bước 3: Chạy
