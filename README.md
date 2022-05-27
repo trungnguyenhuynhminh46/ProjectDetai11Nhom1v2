@@ -33,10 +33,16 @@
 - Tải và cài đặt XAMPP và Git
 ### Bước 2: Cấu hình lại đồ án
 - git clone https://github.com/trungnguyenhuynhminh46/ProjectDetai11Nhom1v2 vào thư mục htdocs của XAMPP 
+#### Tạo API bằng SQS
 - vào AWS Tạo các SQS và Lamda theo file Lamda.txt
 - Chú ý Copy URL các SQS vừa tạo và past vào file lib/tables.php trong thư mục project để thay thế các URL của SQS
-![1](https://user-images.githubusercontent.com/58035150/169813535-2537b298-7833-43ae-b5c9-2c3f3c63286d.png)
-![2](https://user-images.githubusercontent.com/58035150/169813546-af0d0959-1bc5-4c0c-ac72-5d04bd3c4cb5.png)
+![SQS](https://user-images.githubusercontent.com/58035150/170737701-ed18f239-5ed4-4964-8c1c-e14830aeb46f.jpg)
+#### Tạo API bằng API Gateway
+- Vào AWS tạo các Lamda function theo API.txt
+- Làm theo video sau để tạo API cho 2 function vừa tạo 
+{Video hướng dẫn tạo API}
+![API](https://user-images.githubusercontent.com/58035150/170737733-ee732e99-648c-455d-bba5-a2c48f835dcb.png)
+
 ### Bước 3: Chạy
 - Mở XAMPP và start Apache
 - mở trình duyệt http://localhost:'port-apache'/ProjectDetai11Nhom1
