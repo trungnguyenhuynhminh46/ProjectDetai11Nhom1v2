@@ -32,7 +32,7 @@
 + past AWS CLI vừa copy file credentials 
 - Tải và cài đặt XAMPP và Git
 ### Bước 2: Cấu hình lại đồ án
-- git clone (https://github.com/trungnguyenhuynhminh46/ProjectDetai11Nhom1v2) vào thư mục htdocs của XAMPP 
+- git clone https://github.com/trungnguyenhuynhminh46/ProjectDetai11Nhom1v2 vào thư mục htdocs của XAMPP 
 - vào AWS Tạo các SQS và Lamda theo file Lamda.txt
 - Chú ý Copy URL các SQS vừa tạo và past vào file lib/tables.php trong thư mục project để thay thế các URL của SQS
 ![1](https://user-images.githubusercontent.com/58035150/169813535-2537b298-7833-43ae-b5c9-2c3f3c63286d.png)
